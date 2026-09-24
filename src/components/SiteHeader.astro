@@ -1,0 +1,21 @@
+---
+import { clientConfig } from '../config/client';
+import { navigationItems } from '../config/navigation';
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/#inicio" aria-label="Ir al inicio">
+      <span class="brand-mark" aria-hidden="true">{clientConfig.logo.mark}</span>
+      <span class="brand-copy">
+        <strong>{clientConfig.logo.label}</strong>
+        <small>Demo inmobiliaria</small>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      {navigationItems.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,61 @@
+---
+import type { PropertyFilters } from '../domain/filters/types';
+import { propertyTypes } from '../data/property-types';
+import { zones } from '../data/zones';
+
+type Props = {
+  filters: PropertyFilters;
+};
+
+const { filters } = Astro.props;
+const priceOptions = [
+  { label: 'Sin límite', value: '' },
+  { label: 'Hasta USD 100.000', value: 'USD-100000' },
+  { label: 'Hasta USD 180.000', value: 'USD-180000' },
+  { label: 'Hasta USD 300.000', value: 'USD-300000' },
+  { label: 'Hasta ARS 450.000', value: 'ARS-450000' },
+  { label: 'Hasta ARS 650.000', value: 'ARS-650000' },
+];
+const selectedPrice = filters.currency && filters.maxPrice ? `${filters.currency}-${filters.maxPrice}` : '';
+---
+
+<form class="search-panel" action="/" method="get" aria-label="Buscar propiedades demo" data-property-search>
+  <label>
+    <span>Operación</span>
+    <select name="operation">
+      <option value="">Todas</option>
+      <option value="venta" selected={filters.operation === 'venta'}>Comprar</option>
+      <option value="alquiler" selected={filters.operation === 'alquiler'}>Alquilar</option>
+    </select>
+  </label>
+  <label>
+    <span>Tipo</span>
+    <select name="type">
+      <option value="">Todos</option>
+      {propertyTypes.map((type) => (
+        <option value={type.toLowerCase()} selected={filters.type === type}>{type}</option>
+      ))}
+    </select>
+  </label>
+  <label>
+    <span>Zona</span>
+    <select name="zone">
+      <option value="">Todas</option>
+      {zones.map((zone) => (
+        <option value={zone.toLowerCase()} selected={filters.zone === zone}>{zone}</option>
+      ))}
+    </select>
+  </label>
+  <label>
+    <span>Precio</span>
+    <select name="price">
+      {priceOptions.map((option) => (
+        <option value={option.value} selected={selectedPrice === option.value}>{option.label}</option>
+      ))}
+    </select>
+  </label>
+  <div class="search-actions">
+    <button class="button button-primary" type="submit">Buscar</button>
+    <button class="button button-secondary" type="button" data-clear-filters>Limpiar filtros</button>
+  </div>
+</form>

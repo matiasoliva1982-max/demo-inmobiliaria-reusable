@@ -1,0 +1,257 @@
+---
+import DemoBanner from '../../components/DemoBanner.astro';
+import Footer from '../../components/Footer.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import { clientConfig } from '../../config/client';
+import { properties, type Property } from '../../data/properties';
+import { buildPropertyInquiryMessage, buildWhatsappLink } from '../../domain/whatsapp/build-whatsapp-link';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return properties.map((property) => ({
+    params: { slug: property.slug },
+    props: { property },
+  }));
+}
+
+type Props = {
+  property: Property;
+};
+
+const { property } = Astro.props;
+const formatter = new Intl.NumberFormat('es-AR');
+const price = `${property.currency} ${formatter.format(property.price)}`;
+const operationLabel = property.operation === 'venta' ? 'Venta' : 'Alquiler';
+const defaultBack = property.operation === 'venta' ? '/comprar' : '/alquilar';
+const message = buildPropertyInquiryMessage(property);
+const whatsappLink = buildWhatsappLink(clientConfig.contact.whatsapp, message);
+const related = properties
+  .filter((item) => item.slug !== property.slug)
+  .sort((a, b) => {
+    const sameOperation = Number(b.operation === property.operation) - Number(a.operation === property.operation);
+    const sameZone = Number(b.zone === property.zone) - Number(a.zone === property.zone);
+    const sameType = Number(b.type === property.type) - Number(a.type === property.type);
+    return sameOperation || sameZone || sameType;
+  })
+  .slice(0, 3);
+---
+
+<BaseLayout title={property.title} description={`${property.title} en ${property.zone}, ${property.city}. Ficha demo conceptual.`}>
+  <DemoBanner />
+  <SiteHeader />
+  <main>
+    <section class="property-detail-hero">
+      <div class="container detail-breadcrumb">
+        <a href={defaultBack} data-back-link>Propiedades</a>
+        <span aria-hidden="true">/</span>
+        <span>{property.reference}</span>
+      </div>
+      <div class="container property-detail-grid">
+        <div class="detail-gallery" data-gallery aria-label={`Galería demo de ${property.title}`}>
+          <button class="gallery-main" type="button" data-open-gallery aria-label="Ver todas las fotos">
+            <img data-main-image src={property.images[0]} alt={`${property.title} - foto 1`} width="960" height="640" />
+            <span class="property-badge">DEMO</span>
+            <span class="gallery-count" data-gallery-count>1 / {property.images.length}</span>
+          </button>
+          <div class="gallery-thumbs" aria-label="Miniaturas">
+            {property.images.slice(0, 3).map((image, index) => (
+              <button type="button" data-gallery-thumb={index} aria-label={`Ver foto ${index + 1}`}>
+                <img src={image} alt={`${property.title} - miniatura ${index + 1}`} width="220" height="150" />
+              </button>
+            ))}
+            <button class="gallery-all" type="button" data-open-gallery>Ver todas las fotos</button>
+          </div>
+        </div>
+        <aside class="detail-summary" aria-label="Resumen de la propiedad">
+          <p class="eyebrow">{operationLabel} · {property.type}</p>
+          <h1>{property.title}</h1>
+          <p class="detail-price">{price}</p>
+          <p class="detail-location">{property.zone}, {property.city} · {property.reference}</p>
+          <dl class="detail-facts">
+            {property.bedrooms !== null && <div><dt>Dormitorios</dt><dd>{property.bedrooms}</dd></div>}
+            {property.bathrooms !== null && <div><dt>Baños</dt><dd>{property.bathrooms}</dd></div>}
+            <div><dt>Superficie total</dt><dd>{property.totalArea} m²</dd></div>
+            {property.coveredArea > 0 && <div><dt>Superficie cubierta</dt><dd>{property.coveredArea} m²</dd></div>}
+            {property.garage && <div><dt>Cochera</dt><dd>Sí</dd></div>}
+          </dl>
+          {whatsappLink ? (
+            <a class="button button-whatsapp" href={whatsappLink} target="_blank" rel="noreferrer">Consultar por esta propiedad</a>
+          ) : (
+            <button class="button button-primary" type="button" data-open-inquiry>
+              Ver consulta de ejemplo
+            </button>
+          )}
+          <p class="summary-note">La consulta es conceptual y no se enviará en esta demo.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container detail-content-grid">
+        <article class="detail-copy">
+          <p class="eyebrow">Descripción</p>
+          <h2>Sobre esta propiedad</h2>
+          {property.description.map((paragraph) => <p>{paragraph}</p>)}
+        </article>
+        <aside class="feature-panel">
+          <h2>Características principales</h2>
+          <ul class="feature-list">
+            {property.features.map((feature) => <li>{feature}</li>)}
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-tight">
+      <div class="container detail-content-grid">
+        <article class="detail-copy">
+          <p class="eyebrow">Ubicación</p>
+          <h2>Ubicación aproximada</h2>
+          <p>La ubicación mostrada es orientativa por tratarse de una propiedad DEMO.</p>
+        </article>
+        <div class="concept-map" aria-label={`Mapa conceptual de ${property.zone}`}>
+          <span>{property.zone}</span>
+          <small>{property.city}</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight related-section">
+      <div class="container section-heading">
+        <p class="eyebrow">Relacionadas</p>
+        <h2>Propiedades relacionadas</h2>
+      </div>
+      <div class="container property-grid">
+        {related.map((item) => <PropertyCard property={item} />)}
+      </div>
+    </section>
+
+    <section class="section final-cta">
+      <div class="container final-cta-inner">
+        <h2>¿También querés vender una propiedad?</h2>
+        <p>La tasación todavía es conceptual en esta demo. No se envían datos reales.</p>
+        <a class="button button-secondary" href="/#tasaciones">Ver tasación demo</a>
+      </div>
+    </section>
+
+    <div class="modal" data-gallery-modal hidden role="dialog" aria-modal="true" aria-label="Galería de propiedad">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-panel gallery-modal-panel">
+        <button class="modal-close" type="button" data-close-modal aria-label="Cerrar galería">Cerrar</button>
+        <img data-modal-image src={property.images[0]} alt={`${property.title} - galería`} width="1100" height="760" />
+        <div class="modal-controls">
+          <button class="button button-secondary" type="button" data-gallery-prev>Anterior</button>
+          <span data-modal-count>1 / {property.images.length}</span>
+          <button class="button button-secondary" type="button" data-gallery-next>Siguiente</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" data-inquiry-modal hidden role="dialog" aria-modal="true" aria-label="Consulta de ejemplo">
+      <div class="modal-backdrop" data-close-inquiry></div>
+      <div class="modal-panel inquiry-modal-panel">
+        <button class="modal-close" type="button" data-close-inquiry aria-label="Cerrar consulta">Cerrar</button>
+        <p class="eyebrow">Consulta contextual</p>
+        <h2>Mensaje de ejemplo</h2>
+        <blockquote>{message}</blockquote>
+        <p>En una implementación real, este mensaje abriría el WhatsApp de la inmobiliaria con la propiedad identificada.</p>
+      </div>
+    </div>
+
+    <div class="mobile-property-cta">
+      <button class="button button-primary" type="button" data-open-inquiry>Consultar propiedad</button>
+    </div>
+  </main>
+  <Footer />
+  <script define:vars={{ images: property.images, title: property.title, defaultBack }}>
+    const imageList = images;
+    let currentIndex = 0;
+    let touchStart = 0;
+    const mainImage = document.querySelector('[data-main-image]');
+    const galleryCount = document.querySelector('[data-gallery-count]');
+    const modal = document.querySelector('[data-gallery-modal]');
+    const modalImage = document.querySelector('[data-modal-image]');
+    const modalCount = document.querySelector('[data-modal-count]');
+    const inquiryModal = document.querySelector('[data-inquiry-modal]');
+    const backLink = document.querySelector('[data-back-link]');
+    const params = new URLSearchParams(window.location.search);
+    const from = params.get('from');
+
+    if (backLink && from && from.startsWith('/')) {
+      backLink.href = from;
+    }
+
+    function setImage(index) {
+      currentIndex = (index + imageList.length) % imageList.length;
+      const src = imageList[currentIndex];
+
+      if (mainImage) {
+        mainImage.src = src;
+        mainImage.alt = `${title} - foto ${currentIndex + 1}`;
+      }
+
+      if (modalImage) {
+        modalImage.src = src;
+        modalImage.alt = `${title} - galería foto ${currentIndex + 1}`;
+      }
+
+      if (galleryCount) {
+        galleryCount.textContent = `${currentIndex + 1} / ${imageList.length}`;
+      }
+
+      if (modalCount) {
+        modalCount.textContent = `${currentIndex + 1} / ${imageList.length}`;
+      }
+    }
+
+    function setModal(target, open) {
+      target?.toggleAttribute('hidden', !open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    for (const thumb of document.querySelectorAll('[data-gallery-thumb]')) {
+      thumb.addEventListener('click', () => {
+        if (thumb instanceof HTMLElement) {
+          setImage(Number(thumb.dataset.galleryThumb || 0));
+        }
+      });
+    }
+
+    for (const open of document.querySelectorAll('[data-open-gallery]')) {
+      open.addEventListener('click', () => setModal(modal, true));
+    }
+
+    for (const close of document.querySelectorAll('[data-close-modal]')) {
+      close.addEventListener('click', () => setModal(modal, false));
+    }
+
+    document.querySelector('[data-gallery-prev]')?.addEventListener('click', () => setImage(currentIndex - 1));
+    document.querySelector('[data-gallery-next]')?.addEventListener('click', () => setImage(currentIndex + 1));
+
+    modal?.addEventListener('touchstart', (event) => {
+      touchStart = event instanceof TouchEvent ? event.touches[0]?.clientX || 0 : 0;
+    });
+
+    modal?.addEventListener('touchend', (event) => {
+      const end = event instanceof TouchEvent ? event.changedTouches[0]?.clientX || 0 : 0;
+      if (Math.abs(touchStart - end) < 40) return;
+      setImage(touchStart > end ? currentIndex + 1 : currentIndex - 1);
+    });
+
+    for (const open of document.querySelectorAll('[data-open-inquiry]')) {
+      open.addEventListener('click', () => setModal(inquiryModal, true));
+    }
+
+    for (const close of document.querySelectorAll('[data-close-inquiry]')) {
+      close.addEventListener('click', () => setModal(inquiryModal, false));
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        setModal(modal, false);
+        setModal(inquiryModal, false);
+      }
+    });
+  </script>
+</BaseLayout>

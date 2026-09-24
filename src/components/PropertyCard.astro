@@ -1,0 +1,45 @@
+---
+import type { Property } from '../data/properties';
+
+type Props = {
+  property: Property;
+};
+
+const { property } = Astro.props;
+const formatter = new Intl.NumberFormat('es-AR');
+const price = `${property.currency} ${formatter.format(property.price)}`;
+const propertyHref = `/propiedades/${property.slug}/`;
+const operationLabel = property.operation === 'venta' ? 'Venta' : 'Alquiler';
+---
+
+<article
+  class="property-card"
+  data-property-card
+  data-operation={property.operation}
+  data-type={property.type.toLowerCase()}
+  data-zone={property.zone.toLowerCase()}
+  data-currency={property.currency}
+  data-price={property.price}
+  data-featured={property.featured ? 'true' : 'false'}
+>
+  <a class="property-media" href={propertyHref} data-property-link aria-label={`Ver propiedad demo ${property.title}`}>
+    <img src={property.images[0]} alt={property.title} loading="lazy" width="640" height="480" />
+    <span class="property-operation">{operationLabel}</span>
+    <span class="property-badge">DEMO</span>
+  </a>
+  <div class="property-body">
+    <p class="property-price">{price}</p>
+    <h3>{property.title}</h3>
+    <p class="property-location">{property.zone}, {property.city}</p>
+    <p class="property-attributes">
+      {property.bedrooms !== null && <span>{property.bedrooms} dorm.</span>}
+      {property.bathrooms !== null && <span>{property.bathrooms} baño{property.bathrooms === 1 ? '' : 's'}</span>}
+      <span>{property.totalArea} m²</span>
+    </p>
+    {property.garage && <p class="property-garage">Cochera</p>}
+    <p class="property-reference">{property.reference}</p>
+    <a class="button button-compact button-primary property-cta" href={propertyHref} data-property-link>
+      Ver propiedad
+    </a>
+  </div>
+</article>

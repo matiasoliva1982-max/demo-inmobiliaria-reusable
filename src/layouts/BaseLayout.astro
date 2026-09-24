@@ -1,0 +1,49 @@
+---
+import { clientConfig } from '../config/client';
+import { seoConfig } from '../config/seo';
+import '../styles/global.css';
+
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const pageTitle = Astro.props.title
+  ? seoConfig.titleTemplate.replace('%s', Astro.props.title)
+  : seoConfig.title;
+const pageDescription = Astro.props.description ?? seoConfig.description;
+const cssVariables = `
+  :root {
+    --color-primary: ${clientConfig.colors.primary};
+    --color-secondary: ${clientConfig.colors.secondary};
+    --color-surface: ${clientConfig.colors.surface};
+    --color-warm-surface: ${clientConfig.colors.warmSurface};
+    --color-text: ${clientConfig.colors.text};
+    --color-muted: ${clientConfig.colors.muted};
+    --color-white: ${clientConfig.colors.white};
+    --color-whatsapp: ${clientConfig.colors.whatsapp};
+  }
+`;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content={seoConfig.noindex ? 'noindex, nofollow' : 'index, follow'} />
+    <link rel="canonical" href={seoConfig.canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`${clientConfig.name} demo conceptual`} />
+    <meta name="theme-color" content={clientConfig.colors.primary} />
+    <style is:inline set:html={cssVariables}></style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

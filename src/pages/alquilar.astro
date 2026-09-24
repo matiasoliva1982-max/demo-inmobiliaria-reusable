@@ -1,0 +1,20 @@
+---
+import DemoBanner from '../components/DemoBanner.astro';
+import Footer from '../components/Footer.astro';
+import ListingPage from '../components/ListingPage.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Propiedades en alquiler en Rosario">
+  <DemoBanner />
+  <SiteHeader />
+  <main>
+    <ListingPage
+      operation="alquiler"
+      title="Propiedades en alquiler en Rosario"
+      intro="Encontrá propiedades DEMO para alquilar y consultá directamente con la referencia correspondiente."
+    />
+  </main>
+  <Footer />
+</BaseLayout>

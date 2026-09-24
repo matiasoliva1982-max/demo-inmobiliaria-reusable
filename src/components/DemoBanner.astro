@@ -1,0 +1,9 @@
+---
+import { clientConfig } from '../config/client';
+---
+
+{clientConfig.demoMode && (
+  <div class="demo-band" role="status">
+    Demo conceptual — No es el sitio oficial de {clientConfig.logo.label}.
+  </div>
+)}

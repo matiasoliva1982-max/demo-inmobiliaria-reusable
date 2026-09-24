@@ -1,0 +1,389 @@
+---
+import DemoBanner from '../components/DemoBanner.astro';
+import Footer from '../components/Footer.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import PropertySearch from '../components/PropertySearch.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { clientConfig } from '../config/client';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { properties } from '../data/properties';
+import { zones } from '../data/zones';
+import type { PropertyFilters } from '../domain/filters/types';
+import { buildWhatsappLink } from '../domain/whatsapp/build-whatsapp-link';
+
+const filters: PropertyFilters = {};
+const buyProperties = properties.filter((property) => property.operation === 'venta').slice(0, 3);
+const rentProperties = properties.filter((property) => property.operation === 'alquiler').slice(0, 3);
+const highlightedZones = zones.filter((zone) => ['Centro', 'Pichincha', 'Abasto', 'Echesortu', 'Fisherton', 'Alberdi'].includes(zone));
+const whatsappLink = buildWhatsappLink(
+  clientConfig.contact.whatsapp,
+  'Hola, quiero consultar por una propiedad de la demo inmobiliaria.'
+);
+---
+
+<BaseLayout title="Inicio">
+  <DemoBanner />
+  <SiteHeader />
+  <main>
+    <section class="hero section" id="inicio">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">{clientConfig.city} · compra, alquiler y tasación</p>
+          <h1>Encontrá tu próximo lugar en Rosario.</h1>
+          <p>
+            Una experiencia inmobiliaria demo para explorar propiedades, comparar zonas y pedir una tasación simple con una presentación moderna.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/comprar">Ver propiedades</a>
+            <a class="button button-secondary" href="#tasaciones">Solicitar tasación</a>
+          </div>
+          <div class="hero-proof" aria-label="Atributos de la experiencia demo">
+            <span>Propiedades organizadas</span>
+            <span>Consulta simple</span>
+            <span>Modo demo claro</span>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="Buscador de propiedades">
+          <div class="hero-panel-heading">
+            <strong>Buscar en el dataset demo</strong>
+            <span>Filtros rápidos sobre propiedades ficticias.</span>
+          </div>
+          <PropertySearch filters={filters} />
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="propiedades">
+      <div class="container section-heading">
+        <p class="eyebrow">Propiedades demo</p>
+        <h2 id="property-results-heading">Propiedades destacadas</h2>
+        <p id="property-results-copy">
+          Todas las publicaciones son ficticias, no representan inmuebles reales de {clientConfig.name} ni usan fotos de listados reales.
+        </p>
+        <p class="result-count" id="property-results-count" aria-live="polite"></p>
+      </div>
+      <div class="container">
+        <div class="property-grid" data-property-grid>
+          {properties.map((property) => <PropertyCard property={property} />)}
+        </div>
+        <div class="empty-state" data-empty-state hidden>
+          <h3>No encontramos propiedades con esos filtros.</h3>
+          <p>Probá ampliando la búsqueda o consultanos y te ayudamos a encontrar opciones.</p>
+          <button class="button button-secondary" type="button" data-clear-filters>Limpiar filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section zones-section" id="zonas">
+      <div class="container section-heading">
+        <p class="eyebrow">Zonas destacadas</p>
+        <h2>Explorá Rosario por barrios y momentos de búsqueda.</h2>
+        <p>Atajos visuales para filtrar el dataset demo sin inventar valores de mercado ni métricas.</p>
+      </div>
+      <div class="container zone-grid" aria-label="Zonas destacadas de Rosario">
+        {highlightedZones.map((zone) => (
+          <a class="zone-card" href={`/?zone=${encodeURIComponent(zone.toLowerCase())}#propiedades`} data-zone-filter={zone.toLowerCase()}>
+            <span>{zone}</span>
+            <small>Ver propiedades demo</small>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section split-section" id="comprar">
+      <div class="container two-column">
+        <div class="section-heading align-left">
+          <p class="eyebrow">Comprar</p>
+          <h2>Opciones para quienes buscan invertir o mudarse.</h2>
+          <p>
+            La demo permite destacar departamentos, casas y terrenos con datos claros de precio, zona y superficie.
+          </p>
+          <a class="button button-secondary" href="/comprar">Ver compra</a>
+        </div>
+        <div class="mini-list" aria-label="Propiedades demo en venta">
+          {buyProperties.map((property) => (
+            <a href={`/propiedades/${property.slug}/`}>
+              <strong>{property.title}</strong>
+              <span>{property.zone} · {property.currency} {property.price.toLocaleString('es-AR')}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="alquilar">
+      <div class="container two-column reverse">
+        <div class="section-heading align-left">
+          <p class="eyebrow">Alquilar</p>
+          <h2>Alquileres presentados con foco en decisión rápida.</h2>
+          <p>
+            Los alquileres demo muestran disponibilidad, zona, superficie y características esenciales sin recargar la interfaz.
+          </p>
+          <a class="button button-secondary" href="/alquilar">Ver alquileres</a>
+        </div>
+        <div class="mini-list" aria-label="Propiedades demo en alquiler">
+          {rentProperties.map((property) => (
+            <a href={`/propiedades/${property.slug}/`}>
+              <strong>{property.title}</strong>
+              <span>{property.zone} · {property.currency} {property.price.toLocaleString('es-AR')}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="appraisal section" id="tasaciones">
+      <div class="container appraisal-grid">
+        <div>
+          <p class="eyebrow">Tasaciones</p>
+          <h2>¿Querés saber cuánto vale tu propiedad?</h2>
+          <p>
+            Contanos qué propiedad tenés y en qué zona está. Te mostramos cómo sería una solicitud de tasación simple y directa.
+          </p>
+          <p class="demo-inline-note">Interacción demo: no envía datos reales ni simula contacto oficial.</p>
+        </div>
+        <form class="valuation-card" aria-label="Solicitud demo de tasación" data-valuation-form>
+          <label>
+            <span>Tipo de propiedad</span>
+            <select name="valuationType">
+              <option>Departamento</option>
+              <option>Casa</option>
+              <option>Local</option>
+              <option>Terreno</option>
+            </select>
+          </label>
+          <label>
+            <span>Zona</span>
+            <select name="valuationZone">
+              {zones.map((zone) => <option>{zone}</option>)}
+            </select>
+          </label>
+          {whatsappLink ? (
+            <a class="button button-whatsapp" href={whatsappLink} target="_blank" rel="noreferrer">Solicitar tasación</a>
+          ) : (
+            <button class="button button-primary" type="button" data-demo-action data-demo-message="Solicitud demo de tasación: no se envía a un contacto real.">
+              Solicitar tasación
+            </button>
+          )}
+          <p class="valuation-note" data-valuation-feedback>Modo demo: la solicitud no se envía.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="nosotros">
+      <div class="container trust-grid">
+        <div class="section-heading align-left">
+          <p class="eyebrow">Por qué elegirnos</p>
+          <h2>Una experiencia pensada para acompañar decisiones inmobiliarias.</h2>
+          <p>
+            Esta versión prioriza claridad editorial, búsqueda simple, propiedades destacadas y contacto responsable en modo demo.
+          </p>
+        </div>
+        <div class="trust-card">
+          <h3>Conocimiento local</h3>
+          <p>
+            La navegación se organiza por zonas reales de {clientConfig.city} para que la búsqueda se sienta cercana.
+          </p>
+        </div>
+        <div class="trust-card">
+          <h3>Acompañamiento simple</h3>
+          <p>
+            Las consultas y tasaciones están planteadas como caminos claros, sin datos inventados ni promesas automáticas.
+          </p>
+        </div>
+        <div class="trust-card">
+          <h3>Exploración ordenada</h3>
+          <p>Las propiedades se muestran con jerarquía visual, atributos concretos y filtros rápidos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta section">
+      <div class="container final-cta-inner">
+        <h2>¿Buscás comprar, alquilar o tasar?</h2>
+        <p>Esta demo muestra el flujo comercial sin usar datos reales de contacto ni propiedades oficiales.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="/comprar">Ver propiedades</a>
+          <a class="button button-secondary" href="/#contacto">Consultar</a>
+        </div>
+      </div>
+    </section>
+    <div class="mobile-sticky-cta" aria-label="Accesos rápidos">
+      <a href="#propiedades">Consultar</a>
+      <a href="#tasaciones">Tasación</a>
+    </div>
+    <div class="demo-toast" data-demo-toast role="status" aria-live="polite" hidden></div>
+  </main>
+  <Footer />
+  <script>
+    type PriceFilter = {
+      currency: string;
+      maxPrice: number;
+    } | null;
+
+    const form = document.querySelector('[data-property-search]') as HTMLFormElement | null;
+    const heading = document.querySelector('#property-results-heading');
+    const copy = document.querySelector('#property-results-copy');
+    const grid = document.querySelector('[data-property-grid]');
+    const emptyState = document.querySelector('[data-empty-state]');
+    const resultCount = document.querySelector('#property-results-count');
+    const cards = Array.from(document.querySelectorAll('[data-property-card]')).filter(
+      (card): card is HTMLElement => card instanceof HTMLElement
+    );
+    const params = new URLSearchParams(window.location.search);
+
+    const filterState = {
+      operation: params.get('operation') || '',
+      type: params.get('type') || '',
+      zone: params.get('zone') || '',
+      price: params.get('price') || '',
+    };
+
+    function syncSelect(name: string, value: string) {
+      const field = form?.querySelector(`[name="${name}"]`);
+      if (field instanceof HTMLSelectElement) {
+        field.value = value;
+      }
+    }
+
+    function readFormState() {
+      if (!form) {
+        return;
+      }
+
+      const data = new FormData(form);
+      filterState.operation = String(data.get('operation') || '');
+      filterState.type = String(data.get('type') || '');
+      filterState.zone = String(data.get('zone') || '');
+      filterState.price = String(data.get('price') || '');
+    }
+
+    function parsePrice(value: string): PriceFilter {
+      const [currency, amount] = value.split('-');
+      const maxPrice = Number(amount);
+
+      if (!currency || !Number.isFinite(maxPrice)) {
+        return null;
+      }
+
+      return { currency, maxPrice };
+    }
+
+    function matches(card: HTMLElement, priceFilter: PriceFilter) {
+      const operationMatches = !filterState.operation || card.dataset.operation === filterState.operation;
+      const typeMatches = !filterState.type || card.dataset.type === filterState.type;
+      const zoneMatches = !filterState.zone || card.dataset.zone === filterState.zone;
+      const priceMatches = !priceFilter
+        || (card.dataset.currency === priceFilter.currency && Number(card.dataset.price) <= priceFilter.maxPrice);
+
+      return operationMatches && typeMatches && zoneMatches && priceMatches;
+    }
+
+    function applyFilters() {
+      syncSelect('operation', filterState.operation);
+      syncSelect('type', filterState.type);
+      syncSelect('zone', filterState.zone);
+      syncSelect('price', filterState.price);
+
+      const hasFilters = Object.values(filterState).some(Boolean);
+      const priceFilter = filterState.price ? parsePrice(filterState.price) : null;
+      let visibleCount = 0;
+
+      for (const card of cards) {
+        const shouldShow = hasFilters ? matches(card, priceFilter) : card.dataset.featured === 'true';
+        card.toggleAttribute('hidden', !shouldShow);
+        if (shouldShow) {
+          visibleCount += 1;
+        }
+      }
+
+      if (heading) {
+        heading.textContent = hasFilters ? 'Resultados de búsqueda' : 'Propiedades destacadas';
+      }
+
+      if (copy) {
+        copy.textContent = hasFilters
+          ? 'Resultados filtrados sobre propiedades ficticias del dataset demo.'
+          : 'Todas las publicaciones son ficticias, no representan inmuebles reales de la marca demo ni usan fotos de listados reales.';
+      }
+
+      if (resultCount) {
+        resultCount.textContent = hasFilters
+          ? `${visibleCount} resultado${visibleCount === 1 ? '' : 's'} en el dataset demo`
+          : `${visibleCount} propiedades destacadas`;
+      }
+
+      grid?.toggleAttribute('hidden', visibleCount === 0);
+      emptyState?.toggleAttribute('hidden', visibleCount > 0);
+    }
+
+    function updateUrlFromState() {
+      const nextParams = new URLSearchParams();
+
+      for (const [key, value] of Object.entries(filterState)) {
+        if (value) {
+          nextParams.set(key, value);
+        }
+      }
+
+      const nextUrl = nextParams.toString() ? `/?${nextParams.toString()}#propiedades` : '/#propiedades';
+      history.replaceState(null, '', nextUrl);
+    }
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      readFormState();
+      applyFilters();
+      updateUrlFromState();
+      document.querySelector('#propiedades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    form?.addEventListener('change', () => {
+      readFormState();
+      applyFilters();
+      updateUrlFromState();
+    });
+
+    for (const control of document.querySelectorAll('[data-clear-filters]')) {
+      control.addEventListener('click', () => {
+        filterState.operation = '';
+        filterState.type = '';
+        filterState.zone = '';
+        filterState.price = '';
+        applyFilters();
+        updateUrlFromState();
+      });
+    }
+
+    for (const zoneLink of document.querySelectorAll('[data-zone-filter]')) {
+      zoneLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        filterState.operation = '';
+        filterState.type = '';
+        filterState.zone = zoneLink instanceof HTMLElement ? zoneLink.dataset.zoneFilter || '' : '';
+        filterState.price = '';
+        applyFilters();
+        updateUrlFromState();
+        document.querySelector('#propiedades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    const toast = document.querySelector('[data-demo-toast]');
+
+    for (const action of document.querySelectorAll('[data-demo-action]')) {
+      action.addEventListener('click', () => {
+        if (!(toast instanceof HTMLElement) || !(action instanceof HTMLElement)) {
+          return;
+        }
+
+        toast.textContent = action.dataset.demoMessage || 'Modo demo: no se envía a un contacto real.';
+        toast.hidden = false;
+        window.setTimeout(() => {
+          toast.hidden = true;
+        }, 4200);
+      });
+    }
+
+    applyFilters();
+  </script>
+</BaseLayout>

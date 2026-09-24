@@ -1,0 +1,35 @@
+---
+import { clientConfig } from '../config/client';
+import { navigationItems } from '../config/navigation';
+---
+
+<footer class="site-footer" id="contacto">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/#inicio" aria-label="Ir al inicio">
+        <span class="brand-mark" aria-hidden="true">{clientConfig.logo.mark}</span>
+        <span class="brand-copy">
+          <strong>{clientConfig.name}</strong>
+          <small>Demo conceptual — No es el sitio oficial de {clientConfig.logo.label}.</small>
+        </span>
+      </a>
+      <p>
+        Experiencia modelo para validar una presencia inmobiliaria reusable. Los datos de contacto y propiedades son de demostración.
+      </p>
+      <p class="footer-demo-note">Demo conceptual — No es el sitio oficial de {clientConfig.logo.label}.</p>
+    </div>
+    <div>
+      <h2>Secciones</h2>
+      <ul class="footer-links">
+        {navigationItems.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2>Contacto demo</h2>
+      <p>No hay WhatsApp, email ni dirección real configurados para esta demo.</p>
+      <a class="button button-secondary" href="/#tasaciones">Solicitar tasación</a>
+    </div>
+  </div>
+</footer>

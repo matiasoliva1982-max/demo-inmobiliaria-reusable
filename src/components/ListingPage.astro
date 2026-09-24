@@ -1,0 +1,324 @@
+---
+import PropertyCard from './PropertyCard.astro';
+import { clientConfig } from '../config/client';
+import { properties, type Operation } from '../data/properties';
+import { propertyTypes } from '../data/property-types';
+import { zones } from '../data/zones';
+
+type Props = {
+  operation: Operation;
+  title: string;
+  intro: string;
+};
+
+const { operation, title, intro } = Astro.props;
+const operationProperties = properties.filter((property) => property.operation === operation);
+const pagePath = operation === 'venta' ? '/comprar' : '/alquilar';
+const priceOptions = operation === 'venta'
+  ? [
+      { value: '', label: 'Cualquier precio' },
+      { value: 'hasta-60000', label: 'Hasta USD 60.000' },
+      { value: '60000-100000', label: 'USD 60.000-100.000' },
+      { value: '100000-180000', label: 'USD 100.000-180.000' },
+      { value: 'mas-180000', label: 'Más de USD 180.000' },
+    ]
+  : [
+      { value: '', label: 'Cualquier precio' },
+      { value: 'hasta-450000', label: 'Hasta ARS 450.000' },
+      { value: '450000-700000', label: 'ARS 450.000-700.000' },
+      { value: '700000-1000000', label: 'ARS 700.000-1.000.000' },
+      { value: 'mas-1000000', label: 'Más de ARS 1.000.000' },
+    ];
+---
+
+<section class="listing-hero">
+  <div class="container">
+    <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <span>{operation === 'venta' ? 'Comprar' : 'Alquilar'}</span>
+    </nav>
+    <div class="listing-heading">
+      <p class="eyebrow">{clientConfig.city} · {operation === 'venta' ? 'venta' : 'alquiler'}</p>
+      <h1>{title}</h1>
+      <p>{intro}</p>
+    </div>
+  </div>
+</section>
+
+<section class="listing-shell section-tight" data-listing-page data-page-path={pagePath}>
+  <div class="container listing-layout">
+    <aside class="listing-sidebar" data-filter-panel>
+      <div class="filter-panel-heading">
+        <strong>Filtros</strong>
+        <button class="text-button" type="button" data-close-filters>Aplicar</button>
+      </div>
+      <form class="listing-filters" aria-label="Filtros de propiedades" data-listing-filters>
+        <label>
+          <span>Tipo</span>
+          <select name="tipo">
+            <option value="">Todos</option>
+            {propertyTypes.map((type) => <option value={type.toLowerCase()}>{type}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Zona</span>
+          <select name="zona">
+            <option value="">Todas</option>
+            {zones.map((zone) => <option value={zone.toLowerCase()}>{zone}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Precio</span>
+          <select name="precio">
+            {priceOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+          </select>
+        </label>
+        <button class="button button-secondary" type="button" data-clear-listing-filters hidden>Limpiar filtros</button>
+      </form>
+    </aside>
+
+    <div class="listing-results">
+      <div class="listing-toolbar">
+        <button class="button button-secondary filter-toggle" type="button" data-open-filters>
+          Filtrar <span data-active-filter-count hidden></span>
+        </button>
+        <p class="result-count" data-listing-count aria-live="polite"></p>
+        <label class="sort-control">
+          <span>Ordenar</span>
+          <select name="orden" data-sort-select>
+            <option value="destacadas">Destacadas primero</option>
+            <option value="menor-precio">Menor precio</option>
+            <option value="mayor-precio">Mayor precio</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="property-grid listing-grid" data-listing-grid>
+        {operationProperties.map((property) => <PropertyCard property={property} />)}
+      </div>
+
+      <div class="empty-state" data-listing-empty hidden>
+        <h2>No encontramos propiedades con esta combinación.</h2>
+        <p>Probá quitando algún filtro o explorá otra zona.</p>
+        <div class="empty-actions">
+          <button class="button button-primary" type="button" data-clear-listing-filters>Limpiar filtros</button>
+          <a class="button button-secondary" href={pagePath}>Ver propiedades sin filtros</a>
+        </div>
+      </div>
+
+      <div class="listing-valuation-cta">
+        <div>
+          <p class="eyebrow">Tasación conceptual</p>
+          <h2>¿Tenés una propiedad para vender?</h2>
+          <p>En una etapa posterior este bloque puede abrir un flujo real de tasación. Por ahora es solo conceptual.</p>
+        </div>
+        <a class="button button-secondary" href="/#tasaciones">Ver tasación demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  type PriceRange = {
+    min?: number;
+    max?: number;
+  };
+
+  const root = document.querySelector('[data-listing-page]') as HTMLElement | null;
+  const form = document.querySelector('[data-listing-filters]') as HTMLFormElement | null;
+  const sortSelect = document.querySelector('[data-sort-select]') as HTMLSelectElement | null;
+  const grid = document.querySelector('[data-listing-grid]');
+  const empty = document.querySelector('[data-listing-empty]');
+  const count = document.querySelector('[data-listing-count]');
+  const openFilters = document.querySelector('[data-open-filters]');
+  const closeFilters = document.querySelector('[data-close-filters]');
+  const panel = document.querySelector('[data-filter-panel]');
+  const activeFilterCount = document.querySelector('[data-active-filter-count]');
+  const cards = Array.from(document.querySelectorAll('[data-property-card]')).filter(
+    (card): card is HTMLElement => card instanceof HTMLElement
+  );
+
+  const state = {
+    tipo: '',
+    zona: '',
+    precio: '',
+    orden: 'destacadas',
+  };
+
+  function readUrl() {
+    const params = new URLSearchParams(window.location.search);
+    state.tipo = params.get('tipo') || '';
+    state.zona = params.get('zona') || '';
+    state.precio = params.get('precio') || '';
+    state.orden = params.get('orden') || 'destacadas';
+  }
+
+  function syncControls() {
+    if (!form) {
+      return;
+    }
+
+    for (const [name, value] of Object.entries(state)) {
+      const field = name === 'orden' ? sortSelect : form.querySelector(`[name="${name}"]`);
+      if (field instanceof HTMLSelectElement) {
+        field.value = value;
+      }
+    }
+  }
+
+  function readControls() {
+    if (!form) {
+      return;
+    }
+
+    const data = new FormData(form);
+    state.tipo = String(data.get('tipo') || '');
+    state.zona = String(data.get('zona') || '');
+    state.precio = String(data.get('precio') || '');
+    state.orden = sortSelect?.value || 'destacadas';
+  }
+
+  function parsePrice(value: string): PriceRange | null {
+    if (!value) {
+      return null;
+    }
+
+    if (value.startsWith('hasta-')) {
+      return { max: Number(value.replace('hasta-', '')) };
+    }
+
+    if (value.startsWith('mas-')) {
+      return { min: Number(value.replace('mas-', '')) };
+    }
+
+    const [min, max] = value.split('-').map(Number);
+    return Number.isFinite(min) && Number.isFinite(max) ? { min, max } : null;
+  }
+
+  function matches(card: HTMLElement) {
+    const range = parsePrice(state.precio);
+    const price = Number(card.dataset.price);
+    const typeMatches = !state.tipo || card.dataset.type === state.tipo;
+    const zoneMatches = !state.zona || card.dataset.zone === state.zona;
+    const minMatches = !range?.min || price > range.min;
+    const maxMatches = !range?.max || price <= range.max;
+
+    return typeMatches && zoneMatches && minMatches && maxMatches;
+  }
+
+  function sortCards(visibleCards: HTMLElement[]) {
+    const sorted = [...visibleCards].sort((a, b) => {
+      const aPrice = Number(a.dataset.price);
+      const bPrice = Number(b.dataset.price);
+
+      if (state.orden === 'menor-precio') {
+        return aPrice - bPrice;
+      }
+
+      if (state.orden === 'mayor-precio') {
+        return bPrice - aPrice;
+      }
+
+      const featured = Number(b.dataset.featured === 'true') - Number(a.dataset.featured === 'true');
+      return featured || aPrice - bPrice;
+    });
+
+    for (const card of sorted) {
+      grid?.appendChild(card);
+    }
+  }
+
+  function activeFilters() {
+    return [state.tipo, state.zona, state.precio].filter(Boolean).length;
+  }
+
+  function writeUrl() {
+    const params = new URLSearchParams();
+
+    if (state.tipo) params.set('tipo', state.tipo);
+    if (state.zona) params.set('zona', state.zona);
+    if (state.precio) params.set('precio', state.precio);
+    if (state.orden && state.orden !== 'destacadas') params.set('orden', state.orden);
+
+    const next = `${root?.dataset.pagePath || window.location.pathname}${params.toString() ? `?${params}` : ''}`;
+    history.replaceState(null, '', next);
+  }
+
+  function updatePropertyLinks() {
+    const context = `${window.location.pathname}${window.location.search}`;
+
+    for (const link of document.querySelectorAll('[data-property-link]')) {
+      if (!(link instanceof HTMLAnchorElement)) {
+        continue;
+      }
+
+      const base = link.pathname.endsWith('/') ? link.pathname : `${link.pathname}/`;
+      link.href = `${base}?from=${encodeURIComponent(context)}`;
+    }
+  }
+
+  function render() {
+    const visible = cards.filter(matches);
+
+    for (const card of cards) {
+      card.toggleAttribute('hidden', !visible.includes(card));
+    }
+
+    sortCards(visible);
+    empty?.toggleAttribute('hidden', visible.length > 0);
+    grid?.toggleAttribute('hidden', visible.length === 0);
+
+    if (count) {
+      count.textContent = `${visible.length} propiedad${visible.length === 1 ? '' : 'es'} DEMO`;
+    }
+
+    const active = activeFilters();
+    for (const clear of document.querySelectorAll('[data-clear-listing-filters]')) {
+      clear.toggleAttribute('hidden', active === 0);
+    }
+
+    if (activeFilterCount) {
+      activeFilterCount.textContent = String(active);
+      activeFilterCount.toggleAttribute('hidden', active === 0);
+    }
+
+    writeUrl();
+    updatePropertyLinks();
+  }
+
+  function clearFilters() {
+    state.tipo = '';
+    state.zona = '';
+    state.precio = '';
+    syncControls();
+    render();
+  }
+
+  readUrl();
+  syncControls();
+  render();
+
+  form?.addEventListener('change', () => {
+    readControls();
+    render();
+  });
+
+  sortSelect?.addEventListener('change', () => {
+    readControls();
+    render();
+  });
+
+  for (const clear of document.querySelectorAll('[data-clear-listing-filters]')) {
+    clear.addEventListener('click', clearFilters);
+  }
+
+  openFilters?.addEventListener('click', () => {
+    panel?.classList.add('is-open');
+  });
+
+  closeFilters?.addEventListener('click', () => {
+    panel?.classList.remove('is-open');
+    document.querySelector('.listing-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
