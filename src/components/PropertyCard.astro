@@ -22,7 +22,7 @@ const operationLabel = property.operation === 'venta' ? 'Venta' : 'Alquiler';
   data-price={property.price}
   data-featured={property.featured ? 'true' : 'false'}
 >
-  <a class="property-media" href={propertyHref} data-property-link aria-label={`Ver propiedad demo ${property.title}`}>
+  <a class="property-media" href={propertyHref} data-property-link aria-label={`Ver propiedad ${property.title}`}>
     <img src={property.images[0]} alt={property.title} loading="lazy" width="640" height="480" />
     <span class="property-operation">{operationLabel}</span>
     <span class="property-badge">DEMO</span>

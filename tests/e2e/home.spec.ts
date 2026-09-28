@@ -3,15 +3,15 @@ import { expect, test } from '@playwright/test';
 test('renders the conceptual demo home and main routes', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByText('Demo conceptual — No es el sitio oficial de Vértice.').first()).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Encontrá tu próximo lugar en Rosario.' })).toBeVisible();
+  await expect(page.getByText('Demo conceptual · No es el sitio oficial de Vértice Negocios Inmobiliarios.').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Encontrá la propiedad que estás buscando.' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toContainText('Comprar');
   await expect(page.getByRole('link', { name: 'Ver propiedades' }).first()).toHaveAttribute('href', '/comprar');
   await expect(page.locator('.property-card:visible')).toHaveCount(3);
   await expect(page.locator('.property-badge').first()).toHaveText('DEMO');
 });
 
-test('filters home cards without mixing the demo dataset', async ({ page }) => {
+test('filters home cards without mixing property results', async ({ page }) => {
   await page.goto('/');
 
   await page.locator('select[name="operation"]').selectOption('venta');
@@ -23,7 +23,28 @@ test('filters home cards without mixing the demo dataset', async ({ page }) => {
   await expect(page).toHaveURL(/zone=abasto/);
   await expect(page.getByRole('heading', { name: 'Resultados de búsqueda' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Departamento de 2 dormitorios en Abasto' })).toBeVisible();
-  await expect(page.getByText('1 resultado en el dataset demo')).toBeVisible();
+  await expect(page.getByText('1 resultado', { exact: true })).toBeVisible();
+});
+
+test('shows the valuation capture flow without submitting data', async ({ page }) => {
+  await page.goto('/');
+
+  const valuation = page.getByRole('form', { name: 'Solicitud de tasación' });
+  await expect(valuation.getByLabel('Tipo de propiedad')).toBeVisible();
+  await expect(valuation.getByLabel('Zona / barrio')).toBeVisible();
+  await expect(valuation.getByLabel('Datos básicos de la propiedad')).toBeVisible();
+  await expect(valuation.getByLabel('Nombre')).toBeVisible();
+  await expect(valuation.getByLabel('Teléfono / WhatsApp')).toBeVisible();
+
+  await valuation.getByLabel('Datos básicos de la propiedad').fill('2 dormitorios, 70 m2, buen estado');
+  await valuation.getByLabel('Nombre').fill('Persona de prueba');
+  await valuation.getByLabel('Teléfono / WhatsApp').fill('3415550101');
+  await valuation.getByRole('button', { name: 'Solicitar tasación' }).click();
+
+  await expect(page).toHaveURL('/');
+  await expect(
+    page.getByText('Esta es una demostración del flujo de captación. En una implementación real, la consulta sería enviada a la inmobiliaria.')
+  ).toBeVisible();
 });
 
 test('lists buy properties with URL synced filters and sorting', async ({ page }) => {
@@ -85,10 +106,13 @@ test('opens gallery and contextual demo inquiry on a property detail', async ({ 
   await expect(page.getByRole('dialog', { name: 'Galería de propiedad' }).getByText('2 / 5')).toBeVisible();
   await page.getByRole('button', { name: 'Cerrar galería' }).click();
 
-  await page.getByRole('button', { name: 'Ver consulta de ejemplo' }).click();
+  await page
+    .getByRole('complementary', { name: 'Resumen de la propiedad' })
+    .getByRole('button', { name: 'Consultar por WhatsApp' })
+    .click();
   await expect(page.getByText('Hola, quiero consultar por la propiedad REF-004')).toBeVisible();
   await expect(
-    page.getByRole('dialog', { name: 'Consulta de ejemplo' }).getByText('Departamento de 2 dormitorios en Abasto')
+    page.getByRole('dialog', { name: 'Consulta por WhatsApp' }).getByText('Departamento de 2 dormitorios en Abasto')
   ).toBeVisible();
 });
 

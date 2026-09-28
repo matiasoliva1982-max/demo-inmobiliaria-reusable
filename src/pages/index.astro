@@ -17,7 +17,7 @@ const rentProperties = properties.filter((property) => property.operation === 'a
 const highlightedZones = zones.filter((zone) => ['Centro', 'Pichincha', 'Abasto', 'Echesortu', 'Fisherton', 'Alberdi'].includes(zone));
 const whatsappLink = buildWhatsappLink(
   clientConfig.contact.whatsapp,
-  'Hola, quiero consultar por una propiedad de la demo inmobiliaria.'
+  'Hola, quiero consultar por una propiedad.'
 );
 ---
 
@@ -29,24 +29,24 @@ const whatsappLink = buildWhatsappLink(
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">{clientConfig.city} · compra, alquiler y tasación</p>
-          <h1>Encontrá tu próximo lugar en Rosario.</h1>
+          <h1>Encontrá la propiedad que estás buscando.</h1>
           <p>
-            Una experiencia inmobiliaria demo para explorar propiedades, comparar zonas y pedir una tasación simple con una presentación moderna.
+            Compra, alquiler y oportunidades inmobiliarias en Rosario, con búsqueda simple por tipo, zona y precio.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="/comprar">Ver propiedades</a>
             <a class="button button-secondary" href="#tasaciones">Solicitar tasación</a>
           </div>
-          <div class="hero-proof" aria-label="Atributos de la experiencia demo">
+          <div class="hero-proof" aria-label="Fortalezas de búsqueda inmobiliaria">
             <span>Propiedades organizadas</span>
-            <span>Consulta simple</span>
-            <span>Modo demo claro</span>
+            <span>Consultas directas</span>
+            <span>Tasaciones online</span>
           </div>
         </div>
         <div class="hero-panel" aria-label="Buscador de propiedades">
           <div class="hero-panel-heading">
-            <strong>Buscar en el dataset demo</strong>
-            <span>Filtros rápidos sobre propiedades ficticias.</span>
+            <strong>Buscar propiedades</strong>
+            <span>Filtrá por operación, tipo, zona y precio.</span>
           </div>
           <PropertySearch filters={filters} />
         </div>
@@ -55,10 +55,10 @@ const whatsappLink = buildWhatsappLink(
 
     <section class="section section-tight" id="propiedades">
       <div class="container section-heading">
-        <p class="eyebrow">Propiedades demo</p>
+        <p class="eyebrow">Propiedades</p>
         <h2 id="property-results-heading">Propiedades destacadas</h2>
         <p id="property-results-copy">
-          Todas las publicaciones son ficticias, no representan inmuebles reales de {clientConfig.name} ni usan fotos de listados reales.
+          Explorá oportunidades destacadas para comprar o alquilar en Rosario.
         </p>
         <p class="result-count" id="property-results-count" aria-live="polite"></p>
       </div>
@@ -78,13 +78,13 @@ const whatsappLink = buildWhatsappLink(
       <div class="container section-heading">
         <p class="eyebrow">Zonas destacadas</p>
         <h2>Explorá Rosario por barrios y momentos de búsqueda.</h2>
-        <p>Atajos visuales para filtrar el dataset demo sin inventar valores de mercado ni métricas.</p>
+        <p>Atajos visuales para encontrar propiedades según la zona que querés priorizar.</p>
       </div>
       <div class="container zone-grid" aria-label="Zonas destacadas de Rosario">
         {highlightedZones.map((zone) => (
           <a class="zone-card" href={`/?zone=${encodeURIComponent(zone.toLowerCase())}#propiedades`} data-zone-filter={zone.toLowerCase()}>
             <span>{zone}</span>
-            <small>Ver propiedades demo</small>
+            <small>Ver propiedades</small>
           </a>
         ))}
       </div>
@@ -96,11 +96,11 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Comprar</p>
           <h2>Opciones para quienes buscan invertir o mudarse.</h2>
           <p>
-            La demo permite destacar departamentos, casas y terrenos con datos claros de precio, zona y superficie.
+            Departamentos, casas, locales y terrenos presentados con datos claros de precio, zona y superficie.
           </p>
           <a class="button button-secondary" href="/comprar">Ver compra</a>
         </div>
-        <div class="mini-list" aria-label="Propiedades demo en venta">
+        <div class="mini-list" aria-label="Propiedades en venta">
           {buyProperties.map((property) => (
             <a href={`/propiedades/${property.slug}/`}>
               <strong>{property.title}</strong>
@@ -117,11 +117,11 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Alquilar</p>
           <h2>Alquileres presentados con foco en decisión rápida.</h2>
           <p>
-            Los alquileres demo muestran disponibilidad, zona, superficie y características esenciales sin recargar la interfaz.
+            Alquileres con disponibilidad, zona, superficie y características esenciales sin recargar la interfaz.
           </p>
           <a class="button button-secondary" href="/alquilar">Ver alquileres</a>
         </div>
-        <div class="mini-list" aria-label="Propiedades demo en alquiler">
+        <div class="mini-list" aria-label="Propiedades en alquiler">
           {rentProperties.map((property) => (
             <a href={`/propiedades/${property.slug}/`}>
               <strong>{property.title}</strong>
@@ -136,13 +136,13 @@ const whatsappLink = buildWhatsappLink(
       <div class="container appraisal-grid">
         <div>
           <p class="eyebrow">Tasaciones</p>
-          <h2>¿Querés saber cuánto vale tu propiedad?</h2>
+          <h2>Tasá tu propiedad</h2>
           <p>
-            Contanos qué propiedad tenés y en qué zona está. Te mostramos cómo sería una solicitud de tasación simple y directa.
+            ¿Querés conocer el valor de tu propiedad? Completá algunos datos y recibí una evaluación personalizada.
           </p>
-          <p class="demo-inline-note">Interacción demo: no envía datos reales ni simula contacto oficial.</p>
+          <p class="demo-inline-note">Flujo de captación para propietarios interesados. No envía ni almacena datos en esta demostración.</p>
         </div>
-        <form class="valuation-card" aria-label="Solicitud demo de tasación" data-valuation-form>
+        <form class="valuation-card" aria-label="Solicitud de tasación" data-valuation-form>
           <label>
             <span>Tipo de propiedad</span>
             <select name="valuationType">
@@ -153,19 +153,31 @@ const whatsappLink = buildWhatsappLink(
             </select>
           </label>
           <label>
-            <span>Zona</span>
+            <span>Zona / barrio</span>
             <select name="valuationZone">
               {zones.map((zone) => <option>{zone}</option>)}
             </select>
           </label>
+          <label>
+            <span>Datos básicos de la propiedad</span>
+            <textarea name="valuationDetails" rows="3" placeholder="Ambientes, superficie aproximada, estado general"></textarea>
+          </label>
+          <label>
+            <span>Nombre</span>
+            <input name="valuationName" type="text" autocomplete="name" placeholder="Tu nombre" />
+          </label>
+          <label>
+            <span>Teléfono / WhatsApp</span>
+            <input name="valuationPhone" type="tel" autocomplete="tel" placeholder="Tu teléfono" />
+          </label>
           {whatsappLink ? (
             <a class="button button-whatsapp" href={whatsappLink} target="_blank" rel="noreferrer">Solicitar tasación</a>
           ) : (
-            <button class="button button-primary" type="button" data-demo-action data-demo-message="Solicitud demo de tasación: no se envía a un contacto real.">
+            <button class="button button-primary" type="button" data-demo-action data-demo-message="Esta es una demostración del flujo de captación. En una implementación real, la consulta sería enviada a la inmobiliaria.">
               Solicitar tasación
             </button>
           )}
-          <p class="valuation-note" data-valuation-feedback>Modo demo: la solicitud no se envía.</p>
+          <p class="valuation-note" data-valuation-feedback>Los datos no se envían ni se almacenan en esta demo.</p>
         </form>
       </div>
     </section>
@@ -176,7 +188,7 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Por qué elegirnos</p>
           <h2>Una experiencia pensada para acompañar decisiones inmobiliarias.</h2>
           <p>
-            Esta versión prioriza claridad editorial, búsqueda simple, propiedades destacadas y contacto responsable en modo demo.
+            Esta versión prioriza claridad editorial, búsqueda simple, propiedades destacadas y contacto responsable.
           </p>
         </div>
         <div class="trust-card">
@@ -188,7 +200,7 @@ const whatsappLink = buildWhatsappLink(
         <div class="trust-card">
           <h3>Acompañamiento simple</h3>
           <p>
-            Las consultas y tasaciones están planteadas como caminos claros, sin datos inventados ni promesas automáticas.
+            Las consultas y tasaciones están planteadas como caminos claros para que cada contacto llegue con contexto.
           </p>
         </div>
         <div class="trust-card">
@@ -201,7 +213,7 @@ const whatsappLink = buildWhatsappLink(
     <section class="final-cta section">
       <div class="container final-cta-inner">
         <h2>¿Buscás comprar, alquilar o tasar?</h2>
-        <p>Esta demo muestra el flujo comercial sin usar datos reales de contacto ni propiedades oficiales.</p>
+        <p>Mostrá propiedades, recibí consultas y captá tasaciones desde una web clara para tus clientes.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="/comprar">Ver propiedades</a>
           <a class="button button-secondary" href="/#contacto">Consultar</a>
@@ -303,13 +315,13 @@ const whatsappLink = buildWhatsappLink(
 
       if (copy) {
         copy.textContent = hasFilters
-          ? 'Resultados filtrados sobre propiedades ficticias del dataset demo.'
-          : 'Todas las publicaciones son ficticias, no representan inmuebles reales de la marca demo ni usan fotos de listados reales.';
+          ? 'Resultados filtrados por operación, tipo, zona y precio.'
+          : 'Explorá oportunidades destacadas para comprar o alquilar en Rosario.';
       }
 
       if (resultCount) {
         resultCount.textContent = hasFilters
-          ? `${visibleCount} resultado${visibleCount === 1 ? '' : 's'} en el dataset demo`
+          ? `${visibleCount} resultado${visibleCount === 1 ? '' : 's'}`
           : `${visibleCount} propiedades destacadas`;
       }
 
@@ -376,7 +388,7 @@ const whatsappLink = buildWhatsappLink(
           return;
         }
 
-        toast.textContent = action.dataset.demoMessage || 'Modo demo: no se envía a un contacto real.';
+        toast.textContent = action.dataset.demoMessage || 'Esta es una demostración del flujo. En una implementación real, la consulta sería enviada a la inmobiliaria.';
         toast.hidden = false;
         window.setTimeout(() => {
           toast.hidden = true;

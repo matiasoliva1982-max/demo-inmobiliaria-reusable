@@ -37,7 +37,7 @@ const related = properties
   .slice(0, 3);
 ---
 
-<BaseLayout title={property.title} description={`${property.title} en ${property.zone}, ${property.city}. Ficha demo conceptual.`}>
+<BaseLayout title={property.title} description={`${property.title} en ${property.zone}, ${property.city}. Ficha de propiedad.`}>
   <DemoBanner />
   <SiteHeader />
   <main>
@@ -48,7 +48,7 @@ const related = properties
         <span>{property.reference}</span>
       </div>
       <div class="container property-detail-grid">
-        <div class="detail-gallery" data-gallery aria-label={`Galería demo de ${property.title}`}>
+        <div class="detail-gallery" data-gallery aria-label={`Galería de ${property.title}`}>
           <button class="gallery-main" type="button" data-open-gallery aria-label="Ver todas las fotos">
             <img data-main-image src={property.images[0]} alt={`${property.title} - foto 1`} width="960" height="640" />
             <span class="property-badge">DEMO</span>
@@ -79,10 +79,10 @@ const related = properties
             <a class="button button-whatsapp" href={whatsappLink} target="_blank" rel="noreferrer">Consultar por esta propiedad</a>
           ) : (
             <button class="button button-primary" type="button" data-open-inquiry>
-              Ver consulta de ejemplo
+              Consultar por WhatsApp
             </button>
           )}
-          <p class="summary-note">La consulta es conceptual y no se enviará en esta demo.</p>
+          <p class="summary-note">Se abrirá una consulta preparada con la referencia de esta propiedad.</p>
         </aside>
       </div>
     </section>
@@ -130,8 +130,8 @@ const related = properties
     <section class="section final-cta">
       <div class="container final-cta-inner">
         <h2>¿También querés vender una propiedad?</h2>
-        <p>La tasación todavía es conceptual en esta demo. No se envían datos reales.</p>
-        <a class="button button-secondary" href="/#tasaciones">Ver tasación demo</a>
+        <p>Pedí una tasación para recibir una evaluación personalizada de tu propiedad.</p>
+        <a class="button button-secondary" href="/#tasaciones">Solicitar tasación</a>
       </div>
     </section>
 
@@ -148,19 +148,19 @@ const related = properties
       </div>
     </div>
 
-    <div class="modal" data-inquiry-modal hidden role="dialog" aria-modal="true" aria-label="Consulta de ejemplo">
+    <div class="modal" data-inquiry-modal hidden role="dialog" aria-modal="true" aria-label="Consulta por WhatsApp">
       <div class="modal-backdrop" data-close-inquiry></div>
       <div class="modal-panel inquiry-modal-panel">
         <button class="modal-close" type="button" data-close-inquiry aria-label="Cerrar consulta">Cerrar</button>
-        <p class="eyebrow">Consulta contextual</p>
-        <h2>Mensaje de ejemplo</h2>
+        <p class="eyebrow">Consulta por WhatsApp</p>
+        <h2>Mensaje preparado</h2>
         <blockquote>{message}</blockquote>
-        <p>En una implementación real, este mensaje abriría el WhatsApp de la inmobiliaria con la propiedad identificada.</p>
+        <p>Esta es una demostración segura. En una implementación real, este mensaje se enviaría al canal autorizado de la inmobiliaria.</p>
       </div>
     </div>
 
     <div class="mobile-property-cta">
-      <button class="button button-primary" type="button" data-open-inquiry>Consultar propiedad</button>
+      <button class="button button-primary" type="button" data-open-inquiry>Consultar por WhatsApp</button>
     </div>
   </main>
   <Footer />

@@ -109,11 +109,11 @@ const priceOptions = operation === 'venta'
 
       <div class="listing-valuation-cta">
         <div>
-          <p class="eyebrow">Tasación conceptual</p>
+          <p class="eyebrow">Tasación</p>
           <h2>¿Tenés una propiedad para vender?</h2>
-          <p>En una etapa posterior este bloque puede abrir un flujo real de tasación. Por ahora es solo conceptual.</p>
+          <p>Mostrá también un camino claro para que propietarios pidan una tasación.</p>
         </div>
-        <a class="button button-secondary" href="/#tasaciones">Ver tasación demo</a>
+        <a class="button button-secondary" href="/#tasaciones">Solicitar tasación</a>
       </div>
     </div>
   </div>
@@ -270,7 +270,7 @@ const priceOptions = operation === 'venta'
     grid?.toggleAttribute('hidden', visible.length === 0);
 
     if (count) {
-      count.textContent = `${visible.length} propiedad${visible.length === 1 ? '' : 'es'} DEMO`;
+      count.textContent = `${visible.length} propiedad${visible.length === 1 ? '' : 'es'}`;
     }
 
     const active = activeFilters();
