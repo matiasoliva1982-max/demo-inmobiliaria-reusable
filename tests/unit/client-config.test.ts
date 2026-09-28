@@ -9,7 +9,7 @@ describe('client configuration', () => {
     expect(clientConfig.city).toBe('Rosario');
     expect(clientConfig.demoMode).toBe(true);
     expect(seoConfig.noindex).toBe(true);
-    expect(seoConfig.description).toContain('Demo conceptual');
+    expect(seoConfig.description).toContain('Propiedades en venta y alquiler');
   });
 
   it('does not invent real contact data', () => {

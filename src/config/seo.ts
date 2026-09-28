@@ -8,10 +8,10 @@ export type SeoConfig = {
 };
 
 export const seoConfig: SeoConfig = {
-  title: 'Demo inmobiliaria conceptual para Rosario',
-  titleTemplate: '%s | Demo inmobiliaria conceptual',
+  title: 'Vértice Negocios Inmobiliarios | Rosario',
+  titleTemplate: '%s | Vértice Negocios Inmobiliarios',
   description:
-    'Demo conceptual no oficial de una experiencia inmobiliaria reusable para compra, alquiler y tasaciones en Rosario.',
+    'Propiedades en venta y alquiler, búsqueda por zonas y solicitud de tasaciones en Rosario.',
   canonical: 'https://demo-inmobiliaria.local/',
   noindex: true,
   ogImage: null,

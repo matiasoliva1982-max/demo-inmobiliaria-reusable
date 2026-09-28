@@ -29,9 +29,9 @@ const whatsappLink = buildWhatsappLink(
       <div class="container hero-grid">
         <div class="hero-copy">
           <p class="eyebrow">{clientConfig.city} · compra, alquiler y tasación</p>
-          <h1>Encontrá la propiedad que estás buscando.</h1>
+          <h1>Encontrá tu próximo lugar en Rosario.</h1>
           <p>
-            Compra, alquiler y oportunidades inmobiliarias en Rosario, con búsqueda simple por tipo, zona y precio.
+            Explorá propiedades en venta y alquiler, compará zonas y encontrá la opción que mejor se adapta a lo que buscás.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="/comprar">Ver propiedades</a>
@@ -55,7 +55,7 @@ const whatsappLink = buildWhatsappLink(
 
     <section class="section section-tight" id="propiedades">
       <div class="container section-heading">
-        <p class="eyebrow">Propiedades</p>
+        <p class="eyebrow">Selección de propiedades</p>
         <h2 id="property-results-heading">Propiedades destacadas</h2>
         <p id="property-results-copy">
           Explorá oportunidades destacadas para comprar o alquilar en Rosario.
@@ -77,7 +77,7 @@ const whatsappLink = buildWhatsappLink(
     <section class="section zones-section" id="zonas">
       <div class="container section-heading">
         <p class="eyebrow">Zonas destacadas</p>
-        <h2>Explorá Rosario por barrios y momentos de búsqueda.</h2>
+        <h2>Explorá propiedades por zona.</h2>
         <p>Atajos visuales para encontrar propiedades según la zona que querés priorizar.</p>
       </div>
       <div class="container zone-grid" aria-label="Zonas destacadas de Rosario">
@@ -96,7 +96,7 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Comprar</p>
           <h2>Opciones para quienes buscan invertir o mudarse.</h2>
           <p>
-            Departamentos, casas, locales y terrenos presentados con datos claros de precio, zona y superficie.
+            Encontrá departamentos, casas y terrenos en venta con la información esencial para comparar opciones.
           </p>
           <a class="button button-secondary" href="/comprar">Ver compra</a>
         </div>
@@ -117,7 +117,7 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Alquilar</p>
           <h2>Alquileres presentados con foco en decisión rápida.</h2>
           <p>
-            Alquileres con disponibilidad, zona, superficie y características esenciales sin recargar la interfaz.
+            Explorá opciones de alquiler por zona, superficie y características principales.
           </p>
           <a class="button button-secondary" href="/alquilar">Ver alquileres</a>
         </div>
@@ -136,11 +136,10 @@ const whatsappLink = buildWhatsappLink(
       <div class="container appraisal-grid">
         <div>
           <p class="eyebrow">Tasaciones</p>
-          <h2>Tasá tu propiedad</h2>
+          <h2>¿Querés saber cuánto vale tu propiedad?</h2>
           <p>
             ¿Querés conocer el valor de tu propiedad? Completá algunos datos y recibí una evaluación personalizada.
           </p>
-          <p class="demo-inline-note">Flujo de captación para propietarios interesados. No envía ni almacena datos en esta demostración.</p>
         </div>
         <form class="valuation-card" aria-label="Solicitud de tasación" data-valuation-form>
           <label>
@@ -173,11 +172,11 @@ const whatsappLink = buildWhatsappLink(
           {whatsappLink ? (
             <a class="button button-whatsapp" href={whatsappLink} target="_blank" rel="noreferrer">Solicitar tasación</a>
           ) : (
-            <button class="button button-primary" type="button" data-demo-action data-demo-message="Esta es una demostración del flujo de captación. En una implementación real, la consulta sería enviada a la inmobiliaria.">
+            <button class="button button-primary" type="button" data-demo-action data-demo-message="Esta es una demostración del flujo de tasación. No se enviaron ni almacenaron datos.">
               Solicitar tasación
             </button>
           )}
-          <p class="valuation-note" data-valuation-feedback>Los datos no se envían ni se almacenan en esta demo.</p>
+          <p class="valuation-note" data-valuation-feedback>Completá el formulario para preparar tu solicitud.</p>
         </form>
       </div>
     </section>
@@ -188,7 +187,7 @@ const whatsappLink = buildWhatsappLink(
           <p class="eyebrow">Por qué elegirnos</p>
           <h2>Una experiencia pensada para acompañar decisiones inmobiliarias.</h2>
           <p>
-            Esta versión prioriza claridad editorial, búsqueda simple, propiedades destacadas y contacto responsable.
+            Búsqueda simple, información clara y acompañamiento para avanzar con más confianza.
           </p>
         </div>
         <div class="trust-card">
@@ -198,9 +197,9 @@ const whatsappLink = buildWhatsappLink(
           </p>
         </div>
         <div class="trust-card">
-          <h3>Acompañamiento simple</h3>
+          <h3>Atención personalizada</h3>
           <p>
-            Las consultas y tasaciones están planteadas como caminos claros para que cada contacto llegue con contexto.
+            Cada consulta reúne la información necesaria para orientar mejor el próximo paso.
           </p>
         </div>
         <div class="trust-card">
@@ -213,7 +212,7 @@ const whatsappLink = buildWhatsappLink(
     <section class="final-cta section">
       <div class="container final-cta-inner">
         <h2>¿Buscás comprar, alquilar o tasar?</h2>
-        <p>Mostrá propiedades, recibí consultas y captá tasaciones desde una web clara para tus clientes.</p>
+        <p>Encontrá propiedades o contanos qué necesitás para comenzar tu búsqueda.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="/comprar">Ver propiedades</a>
           <a class="button button-secondary" href="/#contacto">Consultar</a>
@@ -388,7 +387,7 @@ const whatsappLink = buildWhatsappLink(
           return;
         }
 
-        toast.textContent = action.dataset.demoMessage || 'Esta es una demostración del flujo. En una implementación real, la consulta sería enviada a la inmobiliaria.';
+        toast.textContent = action.dataset.demoMessage || 'Esta es una demostración del flujo de tasación. No se enviaron ni almacenaron datos.';
         toast.hidden = false;
         window.setTimeout(() => {
           toast.hidden = true;

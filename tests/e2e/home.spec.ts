@@ -4,7 +4,7 @@ test('renders the conceptual demo home and main routes', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByText('Demo conceptual · No es el sitio oficial de Vértice Negocios Inmobiliarios.').first()).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Encontrá la propiedad que estás buscando.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Encontrá tu próximo lugar en Rosario.' })).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toContainText('Comprar');
   await expect(page.getByRole('link', { name: 'Ver propiedades' }).first()).toHaveAttribute('href', '/comprar');
   await expect(page.locator('.property-card:visible')).toHaveCount(3);
@@ -43,7 +43,7 @@ test('shows the valuation capture flow without submitting data', async ({ page }
 
   await expect(page).toHaveURL('/');
   await expect(
-    page.getByText('Esta es una demostración del flujo de captación. En una implementación real, la consulta sería enviada a la inmobiliaria.')
+    page.getByText('Esta es una demostración del flujo de tasación. No se enviaron ni almacenaron datos.')
   ).toBeVisible();
 });
 
